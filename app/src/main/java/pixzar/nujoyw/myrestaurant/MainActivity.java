@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.apache.http.client.methods.HttpPost;
+
+import java.io.InputStream;
+
 public class MainActivity extends AppCompatActivity {
 
     //Explicit
@@ -42,7 +46,25 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(objPolicy);
         //จะทำการต่อเน็ตได้เรียบร้อยค่ะ
 
-        
+        int intTimes = 0;
+        while(intTimes <=1) {
+
+            InputStream objInputStream = null; //
+            String strJSON = null;  //
+            String strUserURL = "http://swiftcodingthai.com/3sep/pixzar/php_get_data_pixzar.php";
+            String strFoodURL = "http://swiftcodingthai.com/3sep/php_get_data_food.php";
+
+            HttpPost objHttpPost = null; //HTTP POST เป็น scheba ที่เถึยงกันอยู่ เพราะยังใช้มันอยู่
+
+            //1. กระบวนการ Create InputStream
+            //2. Create strJSON
+            //3. Update to SQLite
+
+
+
+
+            intTimes += 1;
+        }
 
 
 
