@@ -35,4 +35,7 @@ public class UserTABLE {
         return readSqLiteDatabase.insert(USER_TABLE, null, objContentValues);
     }
 
+
+
+
 }//Main Class

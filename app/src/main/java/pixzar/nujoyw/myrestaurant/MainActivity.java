@@ -1,5 +1,7 @@
 package pixzar.nujoyw.myrestaurant;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,8 +14,6 @@ public class MainActivity extends AppCompatActivity {
     private FoodTABLE objFoodTABLE;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,8 +22,38 @@ public class MainActivity extends AppCompatActivity {
         //สร้างเมธอดขึ้นมา เพื่อติดต่อฐานข้อมูล Create & Connected Database
         createAndConnectedDatabase();
 
-        TestInsertDB();
+        //TestInsertDB();
+
+        //Delete All data
+        deleteAllData();
+
+        //Synchronize JSON to SQLite
+        synJSONtoSQLite();
+
+
     }//onCreate
+
+    private void synJSONtoSQLite() {
+
+        //Change Policy ถ้าไม่ทำจะโกรธมาก
+        //ไม่ให้ android ติดต่อ http ได้โดยตรง
+        StrictMode.ThreadPolicy objPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //สร้าง object objpolicy มาเพื่อ bulid policy
+        StrictMode.setThreadPolicy(objPolicy);
+        //จะทำการต่อเน็ตได้เรียบร้อยค่ะ
+
+        
+
+
+
+    }//synJSONtoSQLite
+
+    private void deleteAllData() {
+        SQLiteDatabase objSQLiteDatabase = openOrCreateDatabase("Restaurant.db", MODE_PRIVATE, null);
+        objSQLiteDatabase.delete("userTABLE", null, null);
+        objSQLiteDatabase.delete("foodTABLE", null, null);
+    }
+
 
     private void TestInsertDB() {
 
