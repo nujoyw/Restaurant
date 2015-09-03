@@ -4,10 +4,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.InputStream;
 
@@ -57,6 +62,26 @@ public class MainActivity extends AppCompatActivity {
             HttpPost objHttpPost = null; //HTTP POST เป็น scheba ที่เถึยงกันอยู่ เพราะยังใช้มันอยู่
 
             //1. กระบวนการ Create InputStream
+            //การเขียนโค้ดที่เสี่ยงกับการ error ให้ทำงานต่อ แล้วขึ้น error ใน log catch แทน จะใช้ try catch
+            //server ล่ม
+            //URL ผิด
+            //exception การ error ที่ยอมรับได้
+            try {
+
+                HttpClient objHttpClient = new DefaultHttpClient();//
+                if (intTimes !=1) {//ครั้งที่ 1 โยนมาเป็น USer ครั้งที่ 2 โยนมาเป็น Food
+                    objHttpPost = new HttpPost(strUserURL);//เมื่อไหร่ก็ตามที่มีการคอนเน็ค
+                } else {
+                    objHttpPost = new HttpPost(strFoodURL);
+
+                }
+                HttpResponse objHttpResponse = objHttpClient.execute(objHttpPost);
+                HttpEntity objHttpEntity = objHttpResponse.getEntity();
+                objInputStream = objHttpEntity.getContent();
+            }catch (Exception e) {
+                Log.d("Rest", "Input ==> "+ e.toString());//ให้โชว์ข้อความของ error อยู่ในรูปแบบของ log catch
+
+            }
             //2. Create strJSON
             //3. Update to SQLite
 
