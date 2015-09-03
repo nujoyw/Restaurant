@@ -7,10 +7,25 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Explicit
+    private UserTABLE objUserTABLE;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //สร้างเมธอดขึ้นมา เพื่อติดต่อฐานข้อมูล Create & Connected Database
+        createAndConnectedDatabase();
+
+
+    }//onCreate
+
+
+    //Auto หลังกด Alt enter
+    private void createAndConnectedDatabase() {
+        objUserTABLE = new UserTABLE(this);//เรียกใช้เมธอดที่เป็น constructor คือ This นั่นเอง
     }
 
     @Override
@@ -34,4 +49,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+}//Main Class
