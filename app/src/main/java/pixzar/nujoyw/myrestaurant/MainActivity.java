@@ -19,8 +19,13 @@ public class MainActivity extends AppCompatActivity {
         //สร้างเมธอดขึ้นมา เพื่อติดต่อฐานข้อมูล Create & Connected Database
         createAndConnectedDatabase();
 
-
+        TestInsertDB();
     }//onCreate
+
+    private void TestInsertDB() {
+
+        objUserTABLE.addNewUser("test", "1234", "pixzar");
+    }
 
 
     //Auto หลังกด Alt enter
