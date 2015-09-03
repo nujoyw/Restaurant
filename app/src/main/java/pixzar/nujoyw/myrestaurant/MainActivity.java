@@ -9,6 +9,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Explicit
     private UserTABLE objUserTABLE;
+    private FoodTABLE objFoodTABLE;
+
+
 
 
     @Override
@@ -25,12 +28,15 @@ public class MainActivity extends AppCompatActivity {
     private void TestInsertDB() {
 
         objUserTABLE.addNewUser("test", "1234", "pixzar");
+        objFoodTABLE.addNewFood("testFood", "testSource", "testPrice");
     }
 
 
     //Auto หลังกด Alt enter
+
     private void createAndConnectedDatabase() {
         objUserTABLE = new UserTABLE(this);//เรียกใช้เมธอดที่เป็น constructor คือ This นั่นเอง
+        objFoodTABLE = new FoodTABLE(this);
     }
 
     @Override
@@ -54,4 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }//Main Class
