@@ -14,7 +14,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         //จะทำการต่อเน็ตได้เรียบร้อยค่ะ
 
         int intTimes = 0;
-        while(intTimes <=1) {
+        while (intTimes <= 1) {
 
             InputStream objInputStream = null; //
             String strJSON = null;  //
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 HttpClient objHttpClient = new DefaultHttpClient();//
-                if (intTimes !=1) {//ครั้งที่ 1 โยนมาเป็น USer ครั้งที่ 2 โยนมาเป็น Food
+                if (intTimes != 1) {//ครั้งที่ 1 โยนมาเป็น USer ครั้งที่ 2 โยนมาเป็น Food
                     objHttpPost = new HttpPost(strUserURL);//เมื่อไหร่ก็ตามที่มีการคอนเน็ค
                 } else {
                     objHttpPost = new HttpPost(strFoodURL);
@@ -78,19 +80,42 @@ public class MainActivity extends AppCompatActivity {
                 HttpResponse objHttpResponse = objHttpClient.execute(objHttpPost);
                 HttpEntity objHttpEntity = objHttpResponse.getEntity();
                 objInputStream = objHttpEntity.getContent();
-            }catch (Exception e) {
-                Log.d("Rest", "Input ==> "+ e.toString());//ให้โชว์ข้อความของ error อยู่ในรูปแบบของ log catch
+            } catch (Exception e) {
+                Log.d("Rest", "Input ==> " + e.toString());//ให้โชว์ข้อความของ error อยู่ในรูปแบบของ log catch
 
             }
-            //2. Create strJSON
+
+
+            //2. Create strJSON  เปลี่ยนตัวไหมพรมให้เป็น String 1 ตัว
+            try {
+                //bufferedReader คือ เอากองเชือก 10 kg ยกคนเดียวไม่ได้ ต้องตัดเป็น 1 เมตร แล้วค่อยๆ โยนตรงนู้น
+                //ดึง data มาเท่าไหน จึงเริ่มตัด เสมือน ดู youtube
+                // การดึง JSON ถ้าอยู่เมืองนอก ไม่ต้องใช้ UTF-8 แต่ไทยต้องใช้
+
+                BufferedReader objBufferedReader = new BufferedReader(new BufferedReader(new InputStreamReader(objInputStream, "UTF-8")));//
+                //ดึงตัดเสร็จ ต้องมีคนเก่งๆ คนนึงมาต่อเชือกมาให้ ให้ยาวเป็นเหมือนเดิม
+                StringBuilder objStringBuilder = new StringBuilder();
+                //strLine จะหิ้วเชือกทีละเส้น ไปให้ stringBuilder ต่อให้
+                String strLine = null;
+                //ทำการ carry ก่อน
+                while ((strLine = objBufferedReader.readLine()) != null) {//ถ้ามันไม่เท่ากับความว่างเปล่า คือเชือกยังไม่หมด ถ้า null เชือกหมดแล้ว
+                    objStringBuilder.append(strLine);//ให้ผูกเชือกไปเรื่อยๆ
+                }//While
+                //เชือกหมด
+                objInputStream.close();//ไม่ต้องโหลดล่ะ ปิดเลย
+                strJSON = objStringBuilder.toString();//เทคทั้งหมดให้เป็น string เส้นเดียว
+
+            } catch (Exception e) {
+                Log.d("Rest", "JSON==>" + e.toString());
+
+            }
+
+
             //3. Update to SQLite
-
-
 
 
             intTimes += 1;
         }
-
 
 
     }//synJSONtoSQLite
