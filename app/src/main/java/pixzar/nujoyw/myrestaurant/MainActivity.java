@@ -1,5 +1,8 @@
 package pixzar.nujoyw.myrestaurant;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,11 +31,17 @@ public class MainActivity extends AppCompatActivity {
     private UserTABLE objUserTABLE;
     private FoodTABLE objFoodTABLE;
 
+    private EditText userEditText, passwordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // ผูกตัวแปรที่ทำการประกาศ useredittext กับ passwordedit text
+        //Bind Widget
+        bindWidget();
+
 
         //สร้างเมธอดขึ้นมา เพื่อติดต่อฐานข้อมูล Create & Connected Database
         createAndConnectedDatabase();
@@ -45,6 +56,86 @@ public class MainActivity extends AppCompatActivity {
 
 
     }//onCreate
+
+    private void bindWidget() {
+        userEditText = (EditText) findViewById(R.id.editText);
+        passwordEditText = (EditText) findViewById(R.id.editText2);
+
+    }
+
+
+    //เพิ่ม code ใต้ เมธอดหลัก
+    public void clickLogin(View view) {
+        String strUser = userEditText.getText().toString().trim();//edit text ที่ get มาให้เป็น string และตัดช่องว่างให้ด้วย
+        String strPassword = passwordEditText.getText().toString().trim();
+
+        //Check zero
+        //ค่าของ strUser มันเท่ากับ ค่าว่างเปล่าหรือเปล่า
+        if (strUser.equals("") || strPassword.equals("")) {
+
+            //Have Space
+            errorDialog("Have Space", "Please Fill All Blank");
+
+        } else {
+
+            //No Space
+            try {
+
+                String[] strMyResult = objUserTABLE.searchUser(strUser);
+                if (strPassword.equals(strMyResult[2])) {
+                    welcomeDialog(strMyResult[3]); // เอาชื่อไปใช้ใน ยินดีต้อนรับ นาย....
+
+                } else {
+                    errorDialog("Password ผิด", "กรุณาใส่ password ให้ถูกต้องนะคะ");
+                }
+
+            } catch (Exception e) {
+                errorDialog("ไม่มี User", "ไม่มี " + strUser + "ในฐานข้อมูลของฉัน");
+            }
+
+        }
+
+
+    }//clickLogin
+
+    private void welcomeDialog(String strName) {
+
+        final AlertDialog.Builder objBuilder = new AlertDialog.Builder(this);
+        objBuilder.setIcon(R.drawable.restaurant_icon);
+        objBuilder.setTitle("Welcome Officer");
+        objBuilder.setMessage("ยินดีต้อนรับ" + strName + "\n" + "สู่ระบบของฉัน");
+        objBuilder.setCancelable(false);
+        objBuilder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //ย้ายการทำงานไปที่ order activity //Intent to OrderActivity
+                Intent objIntent = new Intent(MainActivity.this, OrderActivity.class);//จาก MainActivity ไปที่ OrderActivity
+
+                dialogInterface.dismiss();
+            }
+
+        });
+        objBuilder.show();
+    }
+
+    private void errorDialog(String strTitle, String strMessage) {
+
+        AlertDialog.Builder objBuilder = new AlertDialog.Builder(this);
+        objBuilder.setIcon(R.drawable.danger);
+        objBuilder.setTitle(strTitle);
+        objBuilder.setMessage(strMessage);
+        objBuilder.setCancelable(false);//เครื่องจะมี undo บน home ห้าม cancle น๊ะจ๊ะ
+        objBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss(); //ให้ popup หายไป
+
+            }
+        });
+        objBuilder.show();
+    }//errorDialog
+
 
     private void synJSONtoSQLite() {
 
