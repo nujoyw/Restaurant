@@ -1,16 +1,75 @@
+
 package pixzar.nujoyw.myrestaurant;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 public class OrderActivity extends AppCompatActivity {
+
+    //Explicit
+    private TextView officerTextView;
+    private Spinner deskSpinner;
+    private ListView foodListView;
+    private String officerString, deskString, foodString, itemString;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
+
+        //Bind Widget
+        bindWidget();
+
+        //Show officer
+        showOfficer();
+
+
+        //Create Desk Spinner
+        createDeskSpinner();
+
+    }//OnCreate
+
+    private void createDeskSpinner() {
+        final String[] strDeskArray = {"1", "2", "3", "4", "5"};
+        ArrayAdapter<String> deskAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strDeskArray);//this, ตำแหน่ง layout
+        deskSpinner.setAdapter(deskAdapter);
+
+        deskSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                deskString = strDeskArray[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                deskString = strDeskArray[0];
+            }
+        });
+
+
+    }
+
+    //รับค่าตัวแปร
+    private void showOfficer() {
+        officerString = getIntent().getStringExtra("Officer");
+        officerTextView.setText(officerString);
+
+    }
+
+    private void bindWidget() {
+        officerTextView = (TextView) findViewById(R.id.txtShowOfficer);
+        deskSpinner = (Spinner) findViewById(R.id.spinner);
+        foodListView = (ListView) findViewById(R.id.listView);
+
     }
 
     @Override
@@ -34,4 +93,4 @@ public class OrderActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+}//Main Class

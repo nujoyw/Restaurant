@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
     }//clickLogin
 
-    private void welcomeDialog(String strName) {
+    private void welcomeDialog(final String strName) {
 
         final AlertDialog.Builder objBuilder = new AlertDialog.Builder(this);
         objBuilder.setIcon(R.drawable.restaurant_icon);
@@ -111,7 +111,11 @@ public class MainActivity extends AppCompatActivity {
 
                 //ย้ายการทำงานไปที่ order activity //Intent to OrderActivity
                 Intent objIntent = new Intent(MainActivity.this, OrderActivity.class);//จาก MainActivity ไปที่ OrderActivity
+                objIntent.putExtra("Officer", strName);
+                startActivity(objIntent);
 
+                finish();//ปิดหน้า activity
+                
                 dialogInterface.dismiss();
             }
 

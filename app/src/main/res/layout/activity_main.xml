@@ -19,7 +19,7 @@
             android:layout_height="@dimen/image"
             android:id="@+id/imageView"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/restaurant_icon"
+            android:src="@drawable/seores"
             android:layout_margin="50dp" />
 
         <EditText
